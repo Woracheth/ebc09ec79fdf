@@ -1,7 +1,6 @@
 const Decimal = require('decimal.js');
 
-function trade(scanned) {
-  let series = scanned.statistics;
+function trade(series) {
   let trades = [];
   let buy = series[0];
   let sell = null;

@@ -1,13 +1,13 @@
-const scan = require('./peakAndValleyScanner');
+const scan = require('./peakAndDipScanner');
 
-test('1st item should be valley', () => {
+test('1st item should be dip', () => {
   let input = [
     { date: '2021-01-01', closePrice: 11.0 },
     { date: '2021-01-02', closePrice: 11.0 },
     { date: '2021-01-03', closePrice: 11.0 },
     { date: '2021-01-04', closePrice: 15.0 },
   ];
-  expect(scan(input).isFirstItemLocalPeak).toBe(false);
+  expect(scan(input).firstIsPeak).toBe(false);
 });
 
 test('1st item should be peak', () => {
@@ -16,7 +16,7 @@ test('1st item should be peak', () => {
     { date: '2021-01-02', closePrice: 11.0 },
     { date: '2021-01-04', closePrice: 10.0 },
   ];
-  expect(scan(input).isFirstItemLocalPeak).toBe(true);
+  expect(scan(input).firstIsPeak).toBe(true);
 });
 
 test('1st item should be plateau', () => {
@@ -25,7 +25,7 @@ test('1st item should be plateau', () => {
     { date: '2021-01-02', closePrice: 11.0 },
     { date: '2021-01-04', closePrice: 11.0 },
   ];
-  expect(scan(input).isFirstItemLocalPeak).toBe(null);
+  expect(scan(input).firstIsPeak).toBe(null);
 });
 
 test('2nd item should be local peak', () => {
@@ -34,7 +34,7 @@ test('2nd item should be local peak', () => {
     { date: '2021-01-02', closePrice: 11.0 },
     { date: '2021-01-03', closePrice: 15.0 },
   ];
-  expect(scan(input).statistics[1].closePrice).toBe(15);
+  expect(scan(input).scanned[1].closePrice).toBe(15);
 });
 
 test('first peak should be appended', () => {
@@ -42,10 +42,10 @@ test('first peak should be appended', () => {
     { date: '2021-01-01', closePrice: 11.0 },
     { date: '2021-01-02', closePrice: 15.0 },
   ];
-  expect(scan(input).statistics[1].closePrice).toBe(15);
+  expect(scan(input).scanned[1].closePrice).toBe(15);
 });
 
-test('first valley should be replaced', () => {
+test('first dip should be replaced', () => {
   let input = [
     { date: '2021-01-01', closePrice: 11.0 },
     { date: '2021-01-02', closePrice: 11.0 },
@@ -53,7 +53,7 @@ test('first valley should be replaced', () => {
     { date: '2021-01-04', closePrice: 9.0 },
     { date: '2021-01-05', closePrice: 15.0 },
   ];
-  expect(scan(input).statistics[1].closePrice).toBe(9);
+  expect(scan(input).scanned[1].closePrice).toBe(9);
 });
 
 test('there should be peak on even item (odd index)', () => {
@@ -67,13 +67,13 @@ test('there should be peak on even item (odd index)', () => {
     { date: '2021-01-07', closePrice: 15.0 },
     { date: '2021-01-08', closePrice: 14.0 },
   ];
-  let statistics = scan(input).statistics;
-  for (let i = 1; i < statistics.length; i += 2) {
-    expect(statistics[i].closePrice > statistics[i - 1].closePrice).toBeTruthy();
+  let scanned = scan(input).scanned;
+  for (let i = 1; i < scanned.length; i += 2) {
+    expect(scanned[i].closePrice > scanned[i - 1].closePrice).toBeTruthy();
   }
 });
 
-test('there should be valley on odd item (even index)', () => {
+test('there should be dip on odd item (even index)', () => {
   let input = [
     { date: '2021-01-01', closePrice: 11.0 },
     { date: '2021-01-02', closePrice: 11.0 },
@@ -84,9 +84,9 @@ test('there should be valley on odd item (even index)', () => {
     { date: '2021-01-07', closePrice: 15.0 },
     { date: '2021-01-08', closePrice: 14.0 },
   ];
-  let statistics = scan(input).statistics;
-  for (let i = 1; i < statistics.length; i += 2) {
-    if (i + 1 < statistics.length)
-      expect(statistics[i + 1].closePrice < statistics[i].closePrice).toBeTruthy();
+  let scanned = scan(input).scanned;
+  for (let i = 1; i < scanned.length; i += 2) {
+    if (i + 1 < scanned.length)
+      expect(scanned[i + 1].closePrice < scanned[i].closePrice).toBeTruthy();
   }
 });

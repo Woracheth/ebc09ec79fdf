@@ -1,12 +1,12 @@
 const Decimal = require('decimal.js');
 
-function trade(scanned) {
-  let buyLowIndex = scanned.isFirstItemLocalPeak ? 1 : 0;
+function tradeAlternately(series) {
+  let dip = 0;
   let output = [];
-  for (let peak = buyLowIndex + 1; peak < scanned.statistics.length; peak += 2) {
+  for (let peak = dip + 1; peak < series.length; peak += 2) {
     output.push({
-      buy: scanned.statistics[peak - 1],
-      sell: scanned.statistics[peak],
+      buy: series[peak - 1],
+      sell: series[peak],
     });
   }
   return new TradeResult(output);
@@ -48,4 +48,4 @@ class TradeResult {
   }
 }
 
-module.exports = trade;
+module.exports = { tradeAlternately };
