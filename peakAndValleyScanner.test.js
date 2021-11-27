@@ -1,4 +1,4 @@
-const scan = require('./peakAndValley');
+const scan = require('./peakAndValleyScanner');
 
 test('1st item should be valley', () => {
   let input = [

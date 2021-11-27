@@ -39,12 +39,12 @@ class ScannedResult {
   }
 
   tradeOnce() {
-    const trade = require('./tradeOnce');
+    const trade = require('./onceTrader');
     return trade(this);
   }
 
-  tradeMany() {
-    const trade = require('./tradeMany');
+  tradeFrequent() {
+    const trade = require('./frequentTrader');
     return trade(this);
   }
 }
